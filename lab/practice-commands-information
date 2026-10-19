@@ -1,0 +1,88 @@
+!#/bin/bash
+mkdir -p linux-file-types-and-testing
+cd linux-file-types-and-testing
+
+mkdir regular-files directories symlinks hardlinks scripts reports
+
+echo "Learning Linux file types" > regular-files/notes.txt
+echo 'echo "Hello from a Linux script"' > regular-files/script.sh
+echo "This is a hidden file" > regular-files/.hidden-file
+
+echo "Directory test file" > directories/example.txt
+echo "Practice symbolic and hard links" > symlinks/practice-notes.md
+echo "Hard link testing notes" > hardlinks/README.md
+chmod +x regular-files/script.sh
+#######################################^^^^^^^^^^^^^^^^^^^^^^%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ls -l regular-files/
+this is used to file out the file completelyand also check its permission also
+
+ls -la regular-files/
+it helps to find all the files that are hiden or shown
+
+ls -ld directories
+this is used to find out the directory it is specially shown by the the charector of d
+
+file regular-files/notes.txt
+this is also used to show the charector of the file
+musa@server1:~/linux-file-type-lab$ file regular-files/notes.txt 
+regular-files/notes.txt: ASCII text
+
+stat regular-files/notes.txt
+this is used to give the complete discription of the file
+example
+musa@server1:~/linux-file-type-lab$ stat regular-files/notes.txt 
+  File: regular-files/notes.txt
+  Size: 26        	Blocks: 8          IO Block: 4096   regular file
+Device: 253,0	Inode: 34311298    Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/    musa)   Gid: ( 1000/    musa)
+Context: unconfined_u:object_r:user_home_t:s0
+Access: 2026-10-19 11:34:11.828848178 +0500
+Modify: 2026-10-19 11:25:32.471205552 +0500
+Change: 2026-10-19 11:25:32.471205552 +0500
+ Birth: 2026-10-19 11:24:59.081883000 +0500
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@THIS ARE THE FILE TEST THAT WHETHERE THEY ARE EXISTED OR NOT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+test -f regular-files/notes.txt && echo "Regular file exists"
+test -d directories && echo "Directory exists"
+test -r regular-files/notes.txt && echo "File is readable"
+test -w regular-files/notes.txt && echo "File is writable"
+test -x regular-files/script.sh && echo "File is executable"
+
+
+test -f directories && echo "This is a regular file"
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%PRACTIC THE SOFT LINK DONT WORY WE WILL SHOW OUR PRACTICE SEACION IN THE ANOTER FILE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ln -s ../regular-files/notes.txt symlinks/notes-link.txt
+
+ls -l symlinks/notes-link.txt
+readlink symlinks/notes-link.txt
+cat symlinks/notes-link.txt
+
+test -L symlinks/notes-link.txt && echo "This is a symbolic link"
+test -e symlinks/notes-link.txt && echo "Its target exists"
+
+mv regular-files/notes.txt regular-files/notes-temp.txt
+test -L symlinks/notes-link.txt && echo "The link still exists"
+test -e symlinks/notes-link.txt || echo "The link target is missing"
+
+mv regular-files/notes-temp.txt regular-files/notes.txt
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$HARD LINK COMMANDS AND ITS CREATION&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+ln regular-files/notes.txt hardlinks/notes-hardlink.txt
+
+ls -li regular-files/notes.txt hardlinks/notes-hardlink.txt
+stat regular-files/notes.txt
+stat hardlinks/notes-hardlink.txt
+
+echo "Added through the hard link" >> hardlinks/notes-hardlink.txt
+cat regular-files/notes.txt
+
+rm regular-files/notes.txt
+cat hardlinks/notes-hardlink.txt
+cp hardlinks/notes-hardlink.txt regular-files/notes.txt
+
+

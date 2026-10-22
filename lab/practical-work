@@ -1,0 +1,153 @@
+musa@server1:~/linux-file-type-lab$ ^[[200~test -f regular-files/notes.txt && echo "Regular file exists"
+bash: test: command not found...
+musa@server1:~/linux-file-type-lab$ test -f regular-files/notes.txt && echo "Regular file exists"
+Regular file exists
+musa@server1:~/linux-file-type-lab$ test -d directories && echo "Directory exists" 
+Directory exists
+musa@server1:~/linux-file-type-lab$ test -r regular-files/notes.txt && echo "File is readable" 
+File is readable
+musa@server1:~/linux-file-type-lab$ test -r regular-files/notes.txt && echo "file is readable
+> 
+> ^C
+musa@server1:~/linux-file-type-lab$ test -r regular-files/notes.txt && echo "file is readable"
+file is readable
+musa@server1:~/linux-file-type-lab$ test -w regular-files/notes.txt && echo "file is writable"
+file is writable
+musa@server1:~/linux-file-type-lab$ test -x regular-files/notes.txt && echo " this file is present here"
+musa@server1:~/linux-file-type-lab$ test -d regular-files && echo "dicrectory is exist
+> ^C
+musa@server1:~/linux-file-type-lab$ test -d regular-files && echo "dicrectory is exist"
+dicrectory is exist
+
+
+
+musa@server1:~/linux-file-type-lab$ file regular-files/
+regular-files/: directory
+musa@server1:~/linux-file-type-lab$ file regular-files/notes.txt 
+regular-files/notes.txt: ASCII text
+musa@server1:~/linux-file-type-lab$ stat regular-files/notes.txt 
+  File: regular-files/notes.txt
+  Size: 26        	Blocks: 8          IO Block: 4096   regular file
+Device: 253,0	Inode: 34311298    Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/    musa)   Gid: ( 1000/    musa)
+Context: unconfined_u:object_r:user_home_t:s0
+Access: 2026-10-19 11:34:11.828848178 +0500
+Modify: 2026-10-19 11:25:32.471205552 +0500
+Change: 2026-10-19 11:25:32.471205552 +0500
+ Birth: 2026-10-19 11:24:59.081883000 +0500
+musa@server1:~/linux-file-type-lab$ test -f regular-files/notes.txt && echo "Regular file exists"
+Regular file exists
+musa@server1:~/linux-file-type-lab$ test -d directories && echo "Directory exists" 
+Directory exists
+musa@server1:~/linux-file-type-lab$ test -r regular-files/notes.txt && echo "File is readable" 
+File is readable
+musa@server1:~/linux-file-type-lab$ test -r regular-files/notes.txt && echo "file is readable
+> 
+> ^C
+musa@server1:~/linux-file-type-lab$ test -r regular-files/notes.txt && echo "file is readable"
+file is readable
+musa@server1:~/linux-file-type-lab$ test -w regular-files/notes.txt && echo "file is writable"
+file is writable
+musa@server1:~/linux-file-type-lab$ test -x regular-files/notes.txt && echo " this file is present here"
+musa@server1:~/linux-file-type-lab$ test -d regular-files && echo "dicrectory is exist
+> ^C
+musa@server1:~/linux-file-type-lab$ test -d regular-files && echo "dicrectory is exist"
+dicrectory is exist
+
+
+Working on the Symbolic link
+
+musa@server1:~/linux-file-type-lab$ ln -s ../regular-files/notes.txt symlinks/notes-link.txt 
+musa@server1:~/linux-file-type-lab$ ls -l symlinks/notes-link.txt 
+lrwxrwxrwx. 1 musa musa 26 Oct 19 11:48 symlinks/notes-link.txt -> ../regular-files/notes.txt
+musa@server1:~/linux-file-type-lab$ readlink symlinks/notes-link.txt 
+../regular-files/notes.txt
+musa@server1:~/linux-file-type-lab$ cat symlinks/notes-link.txt 
+Learning Linux file types
+musa@server1:~/linux-file-type-lab$ test -L symlinks/notes-link.txt && echo "This is a symbolic link" 
+This is a symbolic link
+musa@server1:~/linux-file-type-lab$ test -e symlinks/notes-link.txt && echo "Its target exists" 
+Its target exists
+
+mv regular-files/notes-temp.txt regular-files/notes.txt
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&HARDLINK PRACTICAL SEASION&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+musa@server1:~/linux-file-type-lab$ ln regular-files/notes.txt hardlinks/notes-hardlink.txt 
+musa@server1:~/linux-file-type-lab$ ls -li regular-files/notes.txt hardlinks/notes-hardlink.txt 
+34311298 -rw-r--r--. 2 musa musa 26 Oct 19 11:25 hardlinks/notes-hardlink.txt
+34311298 -rw-r--r--. 2 musa musa 26 Oct 19 11:25 regular-files/notes.txt
+musa@server1:~/linux-file-type-lab$ stat regular-files/notes.txt 
+  File: regular-files/notes.txt
+  Size: 26        	Blocks: 8          IO Block: 4096   regular file
+Device: 253,0	Inode: 34311298    Links: 2
+Access: (0644/-rw-r--r--)  Uid: ( 1000/    musa)   Gid: ( 1000/    musa)
+Context: unconfined_u:object_r:user_home_t:s0
+Access: 2026-10-19 11:34:11.828848178 +0500
+Modify: 2026-10-19 11:25:32.471205552 +0500
+Change: 2026-10-19 12:05:18.371603390 +0500
+ Birth: 2026-10-19 11:24:59.081883000 +0500
+
+musa@server1:~/linux-file-type-lab$ stat hardlinks/notes-hardlink.txt 
+  File: hardlinks/notes-hardlink.txt
+  Size: 26        	Blocks: 8          IO Block: 4096   regular file
+Device: 253,0	Inode: 34311298    Links: 2
+Access: (0644/-rw-r--r--)  Uid: ( 1000/    musa)   Gid: ( 1000/    musa)
+Context: unconfined_u:object_r:user_home_t:s0
+Access: 2026-10-19 11:34:11.828848178 +0500
+Modify: 2026-10-19 11:25:32.471205552 +0500
+Change: 2026-10-19 12:05:18.371603390 +0500
+ Birth: 2026-10-19 11:24:59.081883000 +0500
+
+
+musa@server1:~/linux-file-type-lab$ echo "Added through the hard link" >> hardlinks/notes-hardlink.txt 
+
+musa@server1:~/linux-file-type-lab$ cat regular-files/notes.txt 
+Learning Linux file types
+Added through the hard link
+
+musa@server1:~/linux-file-type-lab$ rm regular-files/notes.txt 
+
+musa@server1:~/linux-file-type-lab$ cat hardlinks/notes-hardlink.txt 
+Learning Linux file types
+Added through the hard link
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&Practice in bash language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+musa@server1:~/linux-file-type-lab/lab$ vi practicing-file-in-script
+musa@server1:~/linux-file-type-lab/lab$ chmod +x practicing-file-in-script
+musa@server1:~/linux-file-type-lab/lab$ ./practicing-file-in-script 
+====================================
+ Linux File Types Testing Lab
+====================================
+
+Path: /home/musa/linux-file-type-lab/regular-files/notes.txt
+Type: Missing or unsupported
+-------------------------------
+Path: /home/musa/linux-file-type-lab/regular-files/script.sh
+Type: Regular file
+Readable: yes
+Writable: yes
+Executable/searchable: yes
+-------------------------------
+Path: /home/musa/linux-file-type-lab/directories
+Type: Directory
+Readable: yes
+Writable: yes
+Executable/searchable: yes
+-------------------------------
+Path: /home/musa/linux-file-type-lab/symlinks/notes-link.txt
+Type: Symbolic link
+Target: Missing (broken link)
+-------------------------------
+Path: /home/musa/linux-file-type-lab/hardlinks/notes-hardlink.txt
+Type: Regular file
+Readable: yes
+Writable: yes
+Executable/searchable: no
+-------------------------------
+Testing complete.
+musa@server1:~/linux-file-type-lab/lab$ ls
+practical-work  practice-commands-information  practicing-file-in-script
+

@@ -1,0 +1,60 @@
+
+#!/usr/bin/env bash
+
+set -u
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+echo "===================================="
+echo " Linux File Types Testing Lab"
+echo "===================================="
+echo
+
+check_path() {
+    local path="$1"
+
+    echo "Path: $path"
+
+    if [[ -L "$path" ]]; then
+        echo "Type: Symbolic link"
+        if [[ -e "$path" ]]; then
+            echo "Target: Available"
+        else
+            echo "Target: Missing (broken link)"
+        fi
+    elif [[ -f "$path" ]]; then
+        echo "Type: Regular file"
+    elif [[ -d "$path" ]]; then
+        echo "Type: Directory"
+    elif [[ -p "$path" ]]; then
+        echo "Type: Named pipe"
+    elif [[ -S "$path" ]]; then
+        echo "Type: Socket"
+    elif [[ -b "$path" ]]; then
+        echo "Type: Block device"
+    elif [[ -c "$path" ]]; then
+        echo "Type: Character device"
+    else
+        echo "Type: Missing or unsupported"
+    fi
+
+    if [[ -e "$path" ]]; then
+        [[ -r "$path" ]] && echo "Readable: yes" ||
+            echo "Readable: no"
+        [[ -w "$path" ]] && echo "Writable: yes" ||
+            echo "Writable: no"
+        [[ -x "$path" ]] && echo "Executable/searchable: yes" ||
+            echo "Executable/searchable: no"
+    fi
+
+    echo "-------------------------------"
+}
+
+check_path "$ROOT/regular-files/notes.txt"
+check_path "$ROOT/regular-files/script.sh"
+check_path "$ROOT/directories"
+check_path "$ROOT/symlinks/notes-link.txt"
+check_path "$ROOT/hardlinks/notes-hardlink.txt"
+
+echo "Testing complete."
+

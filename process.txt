@@ -1,0 +1,299 @@
+Processes in Linux - Complete Explanation
+A process is a program that is currently running in memory.
+When you execute a command, Linux creates a process for it.
+Example
+When you run:
+firefox
+Linux starts the Firefox program as a process.
+When you run:
+vim file.txt
+Linux starts a Vim process.
+________________________________________
+Process Life Cycle
+A process usually goes through these stages:
+New → Ready → Running → Waiting → Terminated
+Running
+The process is currently using the CPU.
+Waiting
+The process is waiting for something, such as:
+•	Keyboard input 
+•	Disk read/write 
+•	Network response 
+Terminated
+The process has finished or has been killed.
+________________________________________
+Every Process Has a PID
+PID = Process ID
+Linux assigns a unique number to every process.
+Example:
+ps -ef
+Output:
+UID      PID  PPID CMD
+root       1     0 systemd
+root     900     1 sshd
+apache  1200     1 httpd
+Here:
+•	1 = PID of systemd 
+•	900 = PID of sshd 
+•	1200 = PID of httpd 
+________________________________________
+Parent and Child Processes
+Every process is started by another process.
+PPID
+PPID = Parent Process ID
+Example:
+PID   PPID
+1200    1
+This means process 1200 was started by process 1.
+________________________________________
+Process Hierarchy
+You can see the process tree:
+pstree
+Example:
+systemd
+ ├─sshd
+ ├─httpd
+ └─crond
+systemd is the parent of many services.
+________________________________________
+Process States
+Common states:
+State	Meaning
+R	Running
+S	Sleeping
+D	Waiting for I/O
+T	Stopped
+Z	Zombie
+Check:
+ps aux
+________________________________________
+View Processes
+Basic
+ps
+Shows processes of the current terminal.
+________________________________________
+All Processes
+ps -ef
+or
+ps aux
+________________________________________
+Search for a Process
+ps -ef | grep httpd
+Example:
+ps -ef | grep sshd
+________________________________________
+Real-Time Monitoring
+top
+top
+Shows:
+•	CPU usage 
+•	Memory usage 
+•	Running processes 
+Press:
+q
+to quit.
+________________________________________
+htop
+Install:
+sudo dnf install htop -y
+Run:
+htop
+More user-friendly than top.
+________________________________________
+Foreground and Background Processes
+Foreground
+Runs in the terminal:
+sleep 100
+The terminal waits until it finishes.
+________________________________________
+Background
+Runs behind the scenes:
+sleep 100 &
+The & sends it to the background.
+________________________________________
+Jobs Command
+See background jobs:
+jobs
+Example:
+[1]+ Running sleep 100 &
+________________________________________
+Bring a Job to Foreground
+fg
+________________________________________
+Send a Job to Background
+Press:
+Ctrl + Z
+Then:
+bg
+________________________________________
+Killing Processes
+Find PID
+ps -ef | grep httpd
+________________________________________
+Kill Process
+kill PID
+Example:
+kill 1200
+________________________________________
+Force Kill
+kill -9 1200
+Signal 9 means:
+SIGKILL
+The process is immediately terminated.
+________________________________________
+Common Signals
+Signal	Number	Purpose
+SIGTERM	15	Graceful stop
+SIGKILL	9	Force stop
+SIGSTOP	19	Pause
+SIGCONT	18	Continue
+Example:
+kill -15 PID
+________________________________________
+Process Priority
+Linux decides which process gets CPU time.
+Nice Values
+Range:
+-20 to 19
+•	-20 = Highest priority 
+•	19 = Lowest priority 
+Check:
+ps -el
+________________________________________
+Start with Lower Priority
+nice -n 10 command
+Example:
+nice -n 10 tar -cvf backup.tar /data
+________________________________________
+View Memory Usage
+free -h
+Shows:
+•	Total RAM 
+•	Used RAM 
+•	Free RAM 
+________________________________________
+Find PID Quickly
+pidof httpd
+Example:
+1200 1201 1202
+________________________________________
+System Services Are Processes
+Services are also processes.
+Example:
+sudo systemctl start httpd
+Check:
+ps -ef | grep httpd
+You'll see Apache processes running.
+________________________________________
+Important Process Commands
+Command	Purpose
+ps	Show current processes
+ps -ef	Show all processes
+ps aux	Detailed process list
+top	Real-time monitoring
+htop	Interactive monitoring
+pstree	Process hierarchy
+pgrep name	Find PID by name
+pidof name	Show process IDs
+kill PID	Stop process
+kill -9 PID	Force stop
+jobs	Show background jobs
+fg	Bring job to foreground
+bg	Send job to background
+Easy Definition for Interviews
+A process is an instance of a program that is currently executing. Every process has a unique Process ID (PID), consumes system resources such as CPU and memory, and can run in the foreground or background. Linux provides commands such as ps, top, and kill to manage processes.
+
+
+
+In Linux, Zombie and Orphan processes are two different states of processes. They are often confused, but they are not the same.
+1. Zombie Process
+A zombie process is a process that has finished executing, but its entry still exists in the process table because its parent process has not yet collected its exit status.
+How it happens
+1.	Parent process creates a child process. 
+2.	Child process finishes its work and exits. 
+3.	The child sends its exit status to the parent. 
+4.	If the parent does not read this status using wait() or waitpid(), the child remains as a zombie. 
+Characteristics
+•	The process is already dead. 
+•	It does not use CPU. 
+•	It does not use memory for execution. 
+•	It only occupies a small entry in the process table. 
+•	Its state is shown as Z (Zombie). 
+Example
+Parent Process
+      |
+      +---- Child Process (exits)
+                  |
+                  +---- Zombie (until parent collects status)
+Check Zombie Processes
+ps aux | grep Z
+or
+ps -el | grep Z
+Example output:
+F S UID   PID  PPID C PRI NI ADDR SZ WCHAN TTY TIME CMD
+0 Z 1000 1234 1220 0 80 0 - 0 - ? 00:00:00 myprogram
+The Z indicates a zombie process.
+How to Remove a Zombie
+Usually:
+•	The parent process should call wait(). 
+•	If the parent is stuck, restarting or terminating the parent process may help. 
+•	When the parent dies, the zombie is usually cleaned up by the system. 
+________________________________________
+2. Orphan Process
+An orphan process is a process whose parent process has terminated while the child is still running.
+How it happens
+1.	Parent creates a child process. 
+2.	Parent exits before the child. 
+3.	The child is still running. 
+4.	Linux automatically assigns the child to PID 1 (the init/system manager process). 
+Characteristics
+•	The process is alive and running. 
+•	It can use CPU and memory normally. 
+•	It continues its work. 
+•	It gets adopted by the system's init process. 
+Example
+Parent Process (dies)
+      |
+      +---- Child Process (still running)
+
+Linux adopts child process
+
+init/systemd (PID 1)
+      |
+      +---- Child Process
+Check Orphan Processes
+You can look for processes whose parent is PID 1:
+ps -ef | grep " 1 "
+or
+ps -o pid,ppid,cmd
+Example:
+PID   PPID CMD
+3000     1 myprogram
+Here PPID=1, meaning the process has been adopted and is an orphan.
+________________________________________
+Easy Comparison
+Feature	Zombie Process	Orphan Process
+Alive?	No	Yes
+Running?	No	Yes
+Uses CPU?	No	Yes (if doing work)
+Uses memory?	Very little	Normal process memory
+Parent exists?	Yes, but hasn't collected status	Parent has died
+Process state	Z (Zombie)	Normal state (R, S, etc.)
+Purpose	Waiting for parent to read exit status	Continues running after parent dies
+Simple Real-Life Example
+Imagine a company:
+Zombie
+An employee has resigned and left the company, but HR has not yet removed the employee's record from the database.
+•	Employee = Child process 
+•	HR = Parent process 
+•	Record still exists = Zombie 
+Orphan
+A manager leaves the company, but the employee is still working. The employee is assigned to a new manager.
+•	Manager dies = Parent process exits 
+•	Employee continues working = Orphan process 
+•	New manager = PID 1 (init/systemd) 
+One-Line Memory Trick
+•	Zombie = Dead process waiting for its parent to collect information. 
+•	Orphan = Living process whose parent has died. 
+
+

@@ -1,0 +1,32 @@
+===================================================================
+Linux  server health report 
+================================================================
+Date: Sat Oct 24 12:23:34 PM PKT 2026
+Hostname: server1
+Operating system
+NAME="CentOS Stream"
+VERSION="10 (Coughlan)"
+
+Uptime
+ 12:23:34 up 57 min,  1 user,  load average: 0.00, 0.02, 0.07
+Disk usage
+Filesystem           Size  Used Avail Use% Mounted on
+/dev/mapper/cs-root   22G   14G  8.0G  64% /
+devtmpfs             1.8G     0  1.8G   0% /dev
+tmpfs                1.8G   84K  1.8G   1% /dev/shm
+tmpfs                725M  9.8M  715M   2% /run
+tmpfs                1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+/dev/sda2            960M  579M  382M  61% /boot
+tmpfs                363M  136K  362M   1% /run/user/1000
+/dev/sr0             7.1G  7.1G     0 100% /run/media/musa/CentOS-Stream-10-BaseOS-x86_64
+Memory usage
+               total        used        free      shared  buff/cache   available
+Mem:           3.5Gi       1.5Gi       429Mi        14Mi       1.9Gi       2.1Gi
+Swap:          2.5Gi       6.0Mi       2.5Gi
+Top cpu processes
+    PID TTY          TIME CMD
+   4167 pts/0    00:00:01 bash
+   4842 pts/0    00:00:00 system-health.s
+   4853 pts/0    00:00:00 ps
+IP address
+192.168.65.159 172.17.0.1 172.18.0.1 192.168.49.1 

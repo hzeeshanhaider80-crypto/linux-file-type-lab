@@ -1,0 +1,18 @@
+LINUX USER AUDIT
+Date: Sat Oct 24 04:01:07 PM PKT 2026
+
+Current User:
+musa
+
+Logged-in Users:
+musa     tty2         2026-10-24 15:53 (local)
+
+Users with Interactive Shells:
+User: root | Home: /root | Shell: /bin/bash
+User: musa | Home: /home/musa | Shell: /bin/bash
+User: zeeshan | Home: /home/zeeshan | Shell: /bin/bash
+User: muhammad | Home: /home/muhammad | Shell: /bin/bash
+User: khalid | Home: /home/khalid | Shell: /bin/bash
+
+Accounts with UID 0:
+root
